@@ -14,69 +14,87 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 30px 15px;
       color: #333;
     }
     .container {
       background: white;
       max-width: 520px;
-      width: 90%;
-      padding: 50px 35px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 40px 28px;
       border-radius: 24px;
       box-shadow: 0 25px 50px rgba(0,0,0,0.15);
       text-align: center;
     }
     .logo {
       font-size: 2.8rem;
-      margin-bottom: 10px;
-    }
-    h1 {
-      font-size: 1.9rem;
-      font-weight: 700;
-      color: #1a1a2e;
-      margin-bottom: 12px;
-    }
-    .subtitle {
-      font-size: 1.05rem;
-      color: #555;
-      line-height: 1.6;
       margin-bottom: 8px;
     }
-    .features {
-      margin: 28px 0;
-      text-align: left;
-      background: #f8f9ff;
-      padding: 20px 24px;
-      border-radius: 16px;
+    h1 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #1a1a2e;
+      margin-bottom: 8px;
     }
-    .features p {
-      font-size: 0.95rem;
-      color: #444;
-      margin: 10px 0;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+    .subtitle {
+      font-size: 1rem;
+      color: #555;
+      margin-bottom: 25px;
+    }
+    .upload-box {
+      border: 2px dashed #667eea;
+      border-radius: 16px;
+      padding: 35px 20px;
+      background: #f8f9ff;
+      margin-bottom: 20px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .upload-box:hover {
+      background: #eef0ff;
+      border-color: #764ba2;
+    }
+    .upload-box p {
+      font-size: 1rem;
+      color: #555;
+      margin-top: 10px;
+    }
+    .upload-icon {
+      font-size: 2.5rem;
+    }
+    input[type="file"] {
+      display: none;
     }
     .btn {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 16px 42px;
+      display: block;
+      width: 100%;
+      padding: 16px;
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
-      text-decoration: none;
+      border: none;
       border-radius: 50px;
       font-size: 1.1rem;
       font-weight: 600;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-      transition: transform 0.2s;
+      cursor: pointer;
+      margin-top: 10px;
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
     }
-    .btn:hover {
-      transform: translateY(-2px);
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .preview {
+      margin-top: 20px;
+      display: none;
+    }
+    .preview img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 15px;
     }
     .note {
-      margin-top: 25px;
+      margin-top: 20px;
       font-size: 0.85rem;
       color: #888;
     }
@@ -86,17 +104,40 @@
   <div class="container">
     <div class="logo">🏠</div>
     <h1>Home Made Design AI</h1>
-    <p class="subtitle">Layout અથવા Photo પરથી સુંદર Design Image બનાવો</p>
-    
-    <div class="features">
-      <p>🎨 Wall Paint & Color Combination</p>
-      <p>🛋️ Furniture & Decoration</p>
-      <p>💡 Lighting Effects</p>
-      <p>📐 High Quality 2x / 4x Options</p>
+    <p class="subtitle">Layout અથવા Photo અપલોડ કરો</p>
+
+    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+      <div class="upload-icon">📤</div>
+      <p>ફોટો અથવા Layout અહીં ક્લિક કરીને અપલોડ કરો</p>
+      <p style="font-size: 0.85rem; color: #888;">JPG, PNG સપોર્ટેડ</p>
     </div>
 
-    <a href="#" class="btn">Coming Soon</a>
-    <p class="note">AI Agent + Image Generation જલ્દી આવશે</p>
+    <input type="file" id="fileInput" accept="image/*" onchange="showPreview(event)">
+
+    <div class="preview" id="previewArea">
+      <img id="previewImage" src="" alt="Preview">
+      <button class="btn" id="generateBtn" onclick="startGenerate()">Generate Design</button>
+    </div>
+
+    <p class="note">AI Agent + Image Generation જલ્દી કનેક્ટ થશે</p>
   </div>
+
+  <script>
+    function showPreview(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('previewImage').src = e.target.result;
+          document.getElementById('previewArea').style.display = 'block';
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+
+    function startGenerate() {
+      alert("Generate ફીચર હજુ કનેક્ટ થયું નથી.\nઆગળના સ્ટેપમાં AI API જોડીશું.");
+    }
+  </script>
 </body>
 </html>
