@@ -10,7 +10,7 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 25px 15px;
+      padding: 20px 12px;
       color: #333;
     }
     .container {
@@ -18,25 +18,25 @@
       max-width: 520px;
       width: 100%;
       margin: 0 auto;
-      padding: 35px 25px;
-      border-radius: 24px;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+      padding: 30px 22px;
+      border-radius: 22px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.15);
       text-align: center;
       position: relative;
     }
     .lang-switch {
       position: absolute;
-      top: 15px;
-      right: 15px;
+      top: 12px;
+      right: 12px;
       display: flex;
-      gap: 6px;
+      gap: 5px;
     }
     .lang-btn {
-      padding: 6px 12px;
+      padding: 5px 10px;
       border: 1px solid #ddd;
       background: #f5f5f5;
-      border-radius: 20px;
-      font-size: 0.8rem;
+      border-radius: 16px;
+      font-size: 0.75rem;
       cursor: pointer;
     }
     .lang-btn.active {
@@ -44,37 +44,65 @@
       color: white;
       border-color: #667eea;
     }
-    .logo { font-size: 2.6rem; margin-bottom: 8px; }
-    h1 { font-size: 1.7rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
-    .subtitle { font-size: 0.95rem; color: #555; margin-bottom: 22px; }
+    .logo { font-size: 2.4rem; margin-bottom: 6px; }
+    h1 { font-size: 1.6rem; font-weight: 700; color: #1a1a2e; margin-bottom: 6px; }
+    .subtitle { font-size: 0.92rem; color: #555; margin-bottom: 18px; }
     .upload-box {
       border: 2px dashed #667eea;
-      border-radius: 16px;
-      padding: 30px 15px;
+      border-radius: 14px;
+      padding: 28px 12px;
       background: #f8f9ff;
-      margin-bottom: 18px;
+      margin-bottom: 15px;
       cursor: pointer;
     }
     .upload-box:hover { background: #eef0ff; }
-    .upload-icon { font-size: 2.3rem; }
-    .upload-box p { font-size: 0.95rem; color: #555; margin-top: 8px; }
+    .upload-icon { font-size: 2.2rem; }
+    .upload-box p { font-size: 0.9rem; color: #555; margin-top: 6px; }
     input[type="file"] { display: none; }
     .btn {
       display: block;
       width: 100%;
-      padding: 15px;
+      padding: 14px;
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       border: none;
       border-radius: 50px;
-      font-size: 1.05rem;
+      font-size: 1rem;
       font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
     }
-    .preview { margin-top: 18px; display: none; }
-    .preview img { max-width: 100%; border-radius: 12px; margin-bottom: 12px; }
-    .note { margin-top: 18px; font-size: 0.82rem; color: #888; }
+    .preview { margin-top: 15px; display: none; }
+    .preview img { max-width: 100%; border-radius: 12px; margin-bottom: 10px; }
+    .questions {
+      display: none;
+      text-align: left;
+      margin-top: 20px;
+    }
+    .questions h3 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 1.15rem;
+      color: #1a1a2e;
+    }
+    .q-box {
+      margin-bottom: 14px;
+    }
+    .q-box label {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #333;
+    }
+    .q-box select, .q-box input {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      font-size: 0.9rem;
+    }
+    .note { margin-top: 15px; font-size: 0.8rem; color: #888; }
   </style>
 </head>
 <body>
@@ -89,17 +117,78 @@
     <h1 id="title">Home Made Design AI</h1>
     <p class="subtitle" id="subtitle">Layout અથવા Photo અપલોડ કરો</p>
 
-    <div class="upload-box" onclick="document.getElementById('fileInput').click()">
+    <div class="upload-box" id="uploadBox" onclick="document.getElementById('fileInput').click()">
       <div class="upload-icon">📤</div>
       <p id="uploadText">ફોટો અથવા Layout અહીં ક્લિક કરીને અપલોડ કરો</p>
-      <p style="font-size: 0.82rem; color: #888;" id="supportText">JPG, PNG સપોર્ટેડ</p>
+      <p style="font-size: 0.8rem; color: #888;" id="supportText">JPG, PNG સપોર્ટેડ</p>
     </div>
 
     <input type="file" id="fileInput" accept="image/*" onchange="showPreview(event)">
 
     <div class="preview" id="previewArea">
       <img id="previewImage" src="" alt="Preview">
-      <button class="btn" id="generateBtn" onclick="startGenerate()">Generate Design</button>
+      <button class="btn" id="nextBtn" onclick="showQuestions()">Next → AI Agent</button>
+    </div>
+
+    <!-- AI Agent Questions -->
+    <div class="questions" id="questionsArea">
+      <h3 id="qTitle">AI Agent - તમારી પસંદગી</h3>
+
+      <div class="q-box">
+        <label id="q1">૧. કયો રૂમ છે?</label>
+        <select id="roomType">
+          <option value="living">Living Room</option>
+          <option value="bedroom">Bedroom</option>
+          <option value="kitchen">Kitchen</option>
+          <option value="bathroom">Bathroom</option>
+          <option value="office">Office / Study</option>
+        </select>
+      </div>
+
+      <div class="q-box">
+        <label id="q2">૨. Style કયો ગમે?</label>
+        <select id="styleType">
+          <option value="modern">Modern</option>
+          <option value="traditional">Traditional / Gujarati</option>
+          <option value="minimal">Minimal</option>
+          <option value="luxury">Luxury</option>
+          <option value="scandinavian">Scandinavian</option>
+        </select>
+      </div>
+
+      <div class="q-box">
+        <label id="q3">૩. Wall Color Preference?</label>
+        <select id="wallColor">
+          <option value="white">White / Off-white</option>
+          <option value="beige">Beige / Cream</option>
+          <option value="grey">Grey</option>
+          <option value="blue">Light Blue</option>
+          <option value="green">Light Green</option>
+          <option value="custom">Custom (later)</option>
+        </select>
+      </div>
+
+      <div class="q-box">
+        <label id="q4">૪. Furniture Style?</label>
+        <select id="furniture">
+          <option value="modern">Modern</option>
+          <option value="wooden">Wooden / Traditional</option>
+          <option value="minimal">Minimal</option>
+          <option value="luxury">Luxury</option>
+        </select>
+      </div>
+
+      <div class="q-box">
+        <label id="q5">૫. Lighting?</label>
+        <select id="lighting">
+          <option value="warm">Warm / Cozy</option>
+          <option value="natural">Natural Daylight</option>
+          <option value="cool">Cool White</option>
+          <option value="mixed">Mixed</option>
+        </select>
+      </div>
+
+      <button class="btn" id="generateBtn" onclick="startGenerate()">Generate Design Image</button>
     </div>
 
     <p class="note" id="noteText">AI Agent + Image Generation જલ્દી કનેક્ટ થશે</p>
@@ -112,7 +201,14 @@
         subtitle: "Layout અથવા Photo અપલોડ કરો",
         uploadText: "ફોટો અથવા Layout અહીં ક્લિક કરીને અપલોડ કરો",
         supportText: "JPG, PNG સપોર્ટેડ",
-        generate: "Generate Design",
+        next: "Next → AI Agent",
+        qTitle: "AI Agent - તમારી પસંદગી",
+        q1: "૧. કયો રૂમ છે?",
+        q2: "૨. Style કયો ગમે?",
+        q3: "૩. Wall Color Preference?",
+        q4: "૪. Furniture Style?",
+        q5: "૫. Lighting?",
+        generate: "Generate Design Image",
         note: "AI Agent + Image Generation જલ્દી કનેક્ટ થશે"
       },
       hi: {
@@ -120,7 +216,14 @@
         subtitle: "लेआउट या फोटो अपलोड करें",
         uploadText: "फोटो या लेआउट यहाँ क्लिक करके अपलोड करें",
         supportText: "JPG, PNG सपोर्टेड",
-        generate: "डिज़ाइन जनरेट करें",
+        next: "आगे → AI Agent",
+        qTitle: "AI Agent - आपकी पसंद",
+        q1: "१. कौन सा कमरा है?",
+        q2: "२. स्टाइल कौन सा पसंद है?",
+        q3: "३. दीवार का रंग?",
+        q4: "४. फर्नीचर स्टाइल?",
+        q5: "५. लाइटिंग?",
+        generate: "डिज़ाइन इमेज जनरेट करें",
         note: "AI एजेंट + इमेज जनरेशन जल्द कनेक्ट होगा"
       },
       en: {
@@ -128,21 +231,39 @@
         subtitle: "Upload Layout or Photo",
         uploadText: "Click here to upload Photo or Layout",
         supportText: "JPG, PNG supported",
-        generate: "Generate Design",
+        next: "Next → AI Agent",
+        qTitle: "AI Agent - Your Preferences",
+        q1: "1. Which room is this?",
+        q2: "2. Preferred Style?",
+        q3: "3. Wall Color Preference?",
+        q4: "4. Furniture Style?",
+        q5: "5. Lighting?",
+        generate: "Generate Design Image",
         note: "AI Agent + Image Generation coming soon"
       }
     };
 
+    let currentLang = 'gu';
+
     function changeLang(lang) {
+      currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
 
-      document.getElementById('title').innerText = texts[lang].title;
-      document.getElementById('subtitle').innerText = texts[lang].subtitle;
-      document.getElementById('uploadText').innerText = texts[lang].uploadText;
-      document.getElementById('supportText').innerText = texts[lang].supportText;
-      document.getElementById('generateBtn').innerText = texts[lang].generate;
-      document.getElementById('noteText').innerText = texts[lang].note;
+      const t = texts[lang];
+      document.getElementById('title').innerText = t.title;
+      document.getElementById('subtitle').innerText = t.subtitle;
+      document.getElementById('uploadText').innerText = t.uploadText;
+      document.getElementById('supportText').innerText = t.supportText;
+      document.getElementById('nextBtn').innerText = t.next;
+      document.getElementById('qTitle').innerText = t.qTitle;
+      document.getElementById('q1').innerText = t.q1;
+      document.getElementById('q2').innerText = t.q2;
+      document.getElementById('q3').innerText = t.q3;
+      document.getElementById('q4').innerText = t.q4;
+      document.getElementById('q5').innerText = t.q5;
+      document.getElementById('generateBtn').innerText = t.generate;
+      document.getElementById('noteText').innerText = t.note;
     }
 
     function showPreview(event) {
@@ -152,13 +273,26 @@
         reader.onload = function(e) {
           document.getElementById('previewImage').src = e.target.result;
           document.getElementById('previewArea').style.display = 'block';
+          document.getElementById('uploadBox').style.display = 'none';
         }
         reader.readAsDataURL(file);
       }
     }
 
+    function showQuestions() {
+      document.getElementById('previewArea').style.display = 'none';
+      document.getElementById('questionsArea').style.display = 'block';
+      document.getElementById('subtitle').style.display = 'none';
+    }
+
     function startGenerate() {
-      alert("Generate feature will be connected in next step.");
+      const room = document.getElementById('roomType').value;
+      const style = document.getElementById('styleType').value;
+      const color = document.getElementById('wallColor').value;
+      const furniture = document.getElementById('furniture').value;
+      const lighting = document.getElementById('lighting').value;
+
+      alert("તમારી પસંદગી:\n\nRoom: " + room + "\nStyle: " + style + "\nColor: " + color + "\nFurniture: " + furniture + "\nLighting: " + lighting + "\n\nImage Generation હજુ કનેક્ટ થયું નથી.\nઆગળના સ્ટેપમાં API જોડીશું.");
     }
   </script>
 </body>
