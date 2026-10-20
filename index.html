@@ -5,16 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Home Made Design AI</title>
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 30px 15px;
+      padding: 25px 15px;
       color: #333;
     }
     .container {
@@ -22,94 +18,81 @@
       max-width: 520px;
       width: 100%;
       margin: 0 auto;
-      padding: 40px 28px;
+      padding: 35px 25px;
       border-radius: 24px;
       box-shadow: 0 25px 50px rgba(0,0,0,0.15);
       text-align: center;
+      position: relative;
     }
-    .logo {
-      font-size: 2.8rem;
-      margin-bottom: 8px;
+    .lang-switch {
+      position: absolute;
+      top: 15px;
+      right: 15px;
+      display: flex;
+      gap: 6px;
     }
-    h1 {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #1a1a2e;
-      margin-bottom: 8px;
+    .lang-btn {
+      padding: 6px 12px;
+      border: 1px solid #ddd;
+      background: #f5f5f5;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
     }
-    .subtitle {
-      font-size: 1rem;
-      color: #555;
-      margin-bottom: 25px;
+    .lang-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
     }
+    .logo { font-size: 2.6rem; margin-bottom: 8px; }
+    h1 { font-size: 1.7rem; font-weight: 700; color: #1a1a2e; margin-bottom: 8px; }
+    .subtitle { font-size: 0.95rem; color: #555; margin-bottom: 22px; }
     .upload-box {
       border: 2px dashed #667eea;
       border-radius: 16px;
-      padding: 35px 20px;
+      padding: 30px 15px;
       background: #f8f9ff;
-      margin-bottom: 20px;
+      margin-bottom: 18px;
       cursor: pointer;
-      transition: all 0.2s;
     }
-    .upload-box:hover {
-      background: #eef0ff;
-      border-color: #764ba2;
-    }
-    .upload-box p {
-      font-size: 1rem;
-      color: #555;
-      margin-top: 10px;
-    }
-    .upload-icon {
-      font-size: 2.5rem;
-    }
-    input[type="file"] {
-      display: none;
-    }
+    .upload-box:hover { background: #eef0ff; }
+    .upload-icon { font-size: 2.3rem; }
+    .upload-box p { font-size: 0.95rem; color: #555; margin-top: 8px; }
+    input[type="file"] { display: none; }
     .btn {
       display: block;
       width: 100%;
-      padding: 16px;
+      padding: 15px;
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       border: none;
       border-radius: 50px;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
-      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.35);
     }
-    .btn:disabled {
-      opacity: 0.6;
-      cursor: not-allowed;
-    }
-    .preview {
-      margin-top: 20px;
-      display: none;
-    }
-    .preview img {
-      max-width: 100%;
-      border-radius: 12px;
-      margin-bottom: 15px;
-    }
-    .note {
-      margin-top: 20px;
-      font-size: 0.85rem;
-      color: #888;
-    }
+    .preview { margin-top: 18px; display: none; }
+    .preview img { max-width: 100%; border-radius: 12px; margin-bottom: 12px; }
+    .note { margin-top: 18px; font-size: 0.82rem; color: #888; }
   </style>
 </head>
 <body>
   <div class="container">
+    <div class="lang-switch">
+      <button class="lang-btn active" onclick="changeLang('gu')">ગુજ</button>
+      <button class="lang-btn" onclick="changeLang('hi')">हिंदी</button>
+      <button class="lang-btn" onclick="changeLang('en')">EN</button>
+    </div>
+
     <div class="logo">🏠</div>
-    <h1>Home Made Design AI</h1>
-    <p class="subtitle">Layout અથવા Photo અપલોડ કરો</p>
+    <h1 id="title">Home Made Design AI</h1>
+    <p class="subtitle" id="subtitle">Layout અથવા Photo અપલોડ કરો</p>
 
     <div class="upload-box" onclick="document.getElementById('fileInput').click()">
       <div class="upload-icon">📤</div>
-      <p>ફોટો અથવા Layout અહીં ક્લિક કરીને અપલોડ કરો</p>
-      <p style="font-size: 0.85rem; color: #888;">JPG, PNG સપોર્ટેડ</p>
+      <p id="uploadText">ફોટો અથવા Layout અહીં ક્લિક કરીને અપલોડ કરો</p>
+      <p style="font-size: 0.82rem; color: #888;" id="supportText">JPG, PNG સપોર્ટેડ</p>
     </div>
 
     <input type="file" id="fileInput" accept="image/*" onchange="showPreview(event)">
@@ -119,10 +102,49 @@
       <button class="btn" id="generateBtn" onclick="startGenerate()">Generate Design</button>
     </div>
 
-    <p class="note">AI Agent + Image Generation જલ્દી કનેક્ટ થશે</p>
+    <p class="note" id="noteText">AI Agent + Image Generation જલ્દી કનેક્ટ થશે</p>
   </div>
 
   <script>
+    const texts = {
+      gu: {
+        title: "Home Made Design AI",
+        subtitle: "Layout અથવા Photo અપલોડ કરો",
+        uploadText: "ફોટો અથવા Layout અહીં ક્લિક કરીને અપલોડ કરો",
+        supportText: "JPG, PNG સપોર્ટેડ",
+        generate: "Generate Design",
+        note: "AI Agent + Image Generation જલ્દી કનેક્ટ થશે"
+      },
+      hi: {
+        title: "Home Made Design AI",
+        subtitle: "लेआउट या फोटो अपलोड करें",
+        uploadText: "फोटो या लेआउट यहाँ क्लिक करके अपलोड करें",
+        supportText: "JPG, PNG सपोर्टेड",
+        generate: "डिज़ाइन जनरेट करें",
+        note: "AI एजेंट + इमेज जनरेशन जल्द कनेक्ट होगा"
+      },
+      en: {
+        title: "Home Made Design AI",
+        subtitle: "Upload Layout or Photo",
+        uploadText: "Click here to upload Photo or Layout",
+        supportText: "JPG, PNG supported",
+        generate: "Generate Design",
+        note: "AI Agent + Image Generation coming soon"
+      }
+    };
+
+    function changeLang(lang) {
+      document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      document.getElementById('title').innerText = texts[lang].title;
+      document.getElementById('subtitle').innerText = texts[lang].subtitle;
+      document.getElementById('uploadText').innerText = texts[lang].uploadText;
+      document.getElementById('supportText').innerText = texts[lang].supportText;
+      document.getElementById('generateBtn').innerText = texts[lang].generate;
+      document.getElementById('noteText').innerText = texts[lang].note;
+    }
+
     function showPreview(event) {
       const file = event.target.files[0];
       if (file) {
@@ -136,7 +158,7 @@
     }
 
     function startGenerate() {
-      alert("Generate ફીચર હજુ કનેક્ટ થયું નથી.\nઆગળના સ્ટેપમાં AI API જોડીશું.");
+      alert("Generate feature will be connected in next step.");
     }
   </script>
 </body>
