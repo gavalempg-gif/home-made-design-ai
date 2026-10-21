@@ -72,6 +72,10 @@
       cursor: pointer;
       margin-top: 10px;
     }
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
     .preview { margin-top: 15px; display: none; }
     .preview img { max-width: 100%; border-radius: 12px; margin-bottom: 10px; }
     .questions {
@@ -95,12 +99,27 @@
       margin-bottom: 6px;
       color: #333;
     }
-    .q-box select, .q-box input {
+    .q-box select {
       width: 100%;
       padding: 10px 12px;
       border: 1px solid #ddd;
       border-radius: 10px;
       font-size: 0.9rem;
+    }
+    .result {
+      display: none;
+      margin-top: 20px;
+    }
+    .result img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-bottom: 12px;
+    }
+    .loading {
+      display: none;
+      margin: 20px 0;
+      font-size: 1rem;
+      color: #667eea;
     }
     .note { margin-top: 15px; font-size: 0.8rem; color: #888; }
   </style>
@@ -130,14 +149,13 @@
       <button class="btn" id="nextBtn" onclick="showQuestions()">Next → AI Agent</button>
     </div>
 
-    <!-- AI Agent Questions -->
     <div class="questions" id="questionsArea">
       <h3 id="qTitle">AI Agent - તમારી પસંદગી</h3>
 
       <div class="q-box">
         <label id="q1">૧. કયો રૂમ છે?</label>
         <select id="roomType">
-          <option value="living">Living Room</option>
+          <option value="living room">Living Room</option>
           <option value="bedroom">Bedroom</option>
           <option value="kitchen">Kitchen</option>
           <option value="bathroom">Bathroom</option>
@@ -149,7 +167,7 @@
         <label id="q2">૨. Style કયો ગમે?</label>
         <select id="styleType">
           <option value="modern">Modern</option>
-          <option value="traditional">Traditional / Gujarati</option>
+          <option value="traditional Gujarati">Traditional / Gujarati</option>
           <option value="minimal">Minimal</option>
           <option value="luxury">Luxury</option>
           <option value="scandinavian">Scandinavian</option>
@@ -162,9 +180,8 @@
           <option value="white">White / Off-white</option>
           <option value="beige">Beige / Cream</option>
           <option value="grey">Grey</option>
-          <option value="blue">Light Blue</option>
-          <option value="green">Light Green</option>
-          <option value="custom">Custom (later)</option>
+          <option value="light blue">Light Blue</option>
+          <option value="light green">Light Green</option>
         </select>
       </div>
 
@@ -172,7 +189,7 @@
         <label id="q4">૪. Furniture Style?</label>
         <select id="furniture">
           <option value="modern">Modern</option>
-          <option value="wooden">Wooden / Traditional</option>
+          <option value="wooden traditional">Wooden / Traditional</option>
           <option value="minimal">Minimal</option>
           <option value="luxury">Luxury</option>
         </select>
@@ -181,17 +198,24 @@
       <div class="q-box">
         <label id="q5">૫. Lighting?</label>
         <select id="lighting">
-          <option value="warm">Warm / Cozy</option>
-          <option value="natural">Natural Daylight</option>
-          <option value="cool">Cool White</option>
+          <option value="warm cozy">Warm / Cozy</option>
+          <option value="natural daylight">Natural Daylight</option>
+          <option value="cool white">Cool White</option>
           <option value="mixed">Mixed</option>
         </select>
       </div>
 
       <button class="btn" id="generateBtn" onclick="startGenerate()">Generate Design Image</button>
+      <div class="loading" id="loadingText">Generating... Please wait 20-40 seconds</div>
     </div>
 
-    <p class="note" id="noteText">AI Agent + Image Generation જલ્દી કનેક્ટ થશે</p>
+    <div class="result" id="resultArea">
+      <h3>Your Designed Image</h3>
+      <img id="resultImage" src="" alt="Generated Design">
+      <button class="btn" onclick="location.reload()">Generate New</button>
+    </div>
+
+    <p class="note" id="noteText">AI powered by Fal.ai + Gemini</p>
   </div>
 
   <script>
@@ -209,7 +233,8 @@
         q4: "૪. Furniture Style?",
         q5: "૫. Lighting?",
         generate: "Generate Design Image",
-        note: "AI Agent + Image Generation જલ્દી કનેક્ટ થશે"
+        loading: "Generating... Please wait 20-40 seconds",
+        note: "AI powered by Fal.ai + Gemini"
       },
       hi: {
         title: "Home Made Design AI",
@@ -224,7 +249,8 @@
         q4: "४. फर्नीचर स्टाइल?",
         q5: "५. लाइटिंग?",
         generate: "डिज़ाइन इमेज जनरेट करें",
-        note: "AI एजेंट + इमेज जनरेशन जल्द कनेक्ट होगा"
+        loading: "जनरेट हो रहा है... 20-40 सेकंड प्रतीक्षा करें",
+        note: "AI powered by Fal.ai + Gemini"
       },
       en: {
         title: "Home Made Design AI",
@@ -239,7 +265,8 @@
         q4: "4. Furniture Style?",
         q5: "5. Lighting?",
         generate: "Generate Design Image",
-        note: "AI Agent + Image Generation coming soon"
+        loading: "Generating... Please wait 20-40 seconds",
+        note: "AI powered by Fal.ai + Gemini"
       }
     };
 
@@ -249,7 +276,6 @@
       currentLang = lang;
       document.querySelectorAll('.lang-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
-
       const t = texts[lang];
       document.getElementById('title').innerText = t.title;
       document.getElementById('subtitle').innerText = t.subtitle;
@@ -263,6 +289,7 @@
       document.getElementById('q4').innerText = t.q4;
       document.getElementById('q5').innerText = t.q5;
       document.getElementById('generateBtn').innerText = t.generate;
+      document.getElementById('loadingText').innerText = t.loading;
       document.getElementById('noteText').innerText = t.note;
     }
 
@@ -285,14 +312,49 @@
       document.getElementById('subtitle').style.display = 'none';
     }
 
-    function startGenerate() {
+    async function startGenerate() {
       const room = document.getElementById('roomType').value;
       const style = document.getElementById('styleType').value;
       const color = document.getElementById('wallColor').value;
       const furniture = document.getElementById('furniture').value;
       const lighting = document.getElementById('lighting').value;
 
-      alert("તમારી પસંદગી:\n\nRoom: " + room + "\nStyle: " + style + "\nColor: " + color + "\nFurniture: " + furniture + "\nLighting: " + lighting + "\n\nImage Generation હજુ કનેક્ટ થયું નથી.\nઆગળના સ્ટેપમાં API જોડીશું.");
+      const btn = document.getElementById('generateBtn');
+      const loading = document.getElementById('loadingText');
+
+      btn.disabled = true;
+      loading.style.display = 'block';
+
+      try {
+        const response = await fetch('/api/generate', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            room: room,
+            style: style,
+            color: color,
+            furniture: furniture,
+            lighting: lighting
+          })
+        });
+
+        const data = await response.json();
+
+        if (data.success && data.imageUrl) {
+          document.getElementById('resultImage').src = data.imageUrl;
+          document.getElementById('questionsArea').style.display = 'none';
+          document.getElementById('resultArea').style.display = 'block';
+        } else {
+          alert('Error: ' + (data.error || 'Generation failed'));
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+
+      btn.disabled = false;
+      loading.style.display = 'none';
     }
   </script>
 </body>
